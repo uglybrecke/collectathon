@@ -1,3 +1,4 @@
+#include <bn_backdrop.h>
 #include <bn_core.h>
 #include <bn_display.h>
 #include <bn_log.h>
@@ -38,6 +39,8 @@ int main()
     bn::core::init();
 
     bn::random rng = bn::random();
+
+    bn::backdrop::set_color(bn::color(5, 0, 8));
 
     // Will hold the sprites for the score
     bn::vector<bn::sprite_ptr, MAX_SCORE_CHARS> score_sprites = {};
