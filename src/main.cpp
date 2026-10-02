@@ -34,13 +34,13 @@ static constexpr int MAX_SCORE_CHARS = 11;
 static constexpr int SCORE_X = 70;
 static constexpr int SCORE_Y = -70;
 
-// player start location
+// Player start location
 static constexpr int PLAYER_INITIAL_X = 0;
 static constexpr int PLAYER_INITIAL_Y = 0;
 
-// dot start location
-static constexpr int DOT_INITIAL_X = 0;
-static constexpr int DOT_INITIAL_Y = -25;
+// Treasure start location
+static constexpr int TREASURE_INITIAL_X = 0;
+static constexpr int TREASURE_INITIAL_Y = -25;
 
 int main()
 {
@@ -57,7 +57,7 @@ int main()
     int score = 0;
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
-    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(DOT_INITIAL_X, DOT_INITIAL_Y);
+    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
     while (true)
     {
@@ -81,7 +81,7 @@ int main()
         if (bn::keypad::start_pressed())
         {
             player.set_position(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
-            treasure.set_position(DOT_INITIAL_X, DOT_INITIAL_Y);
+            treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
         }
         // The bounding boxes of the player and treasure, snapped to integer pixels
