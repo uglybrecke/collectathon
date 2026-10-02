@@ -34,13 +34,13 @@ static constexpr int MAX_SCORE_CHARS = 11;
 static constexpr int SCORE_X = 70;
 static constexpr int SCORE_Y = -70;
 
-//player start location
-static constexpr int PLAYER_X = 0;
-static constexpr int PLAYER_Y = 0;
+// player start location
+static constexpr int PLAYER_INITIAL_X = 0;
+static constexpr int PLAYER_INITIAL_Y = 0;
 
-//dot start location
-static constexpr int DOT_X = 0;
-static constexpr int DOT_Y = -25;
+// dot start location
+static constexpr int DOT_INITIAL_X = 0;
+static constexpr int DOT_INITIAL_Y = -25;
 
 int main()
 {
@@ -56,8 +56,8 @@ int main()
 
     int score = 0;
 
-    bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_X, PLAYER_Y);
-    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(DOT_X, DOT_Y);
+    bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
+    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(DOT_INITIAL_X, DOT_INITIAL_Y);
 
     while (true)
     {
