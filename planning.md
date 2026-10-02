@@ -10,7 +10,19 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
 
 
 ## Planning required changes
-Screen resolution is 240x160, maybe once the player is at/beyond the edge we could set their x/y position to (position * -1) ? 
+
+
+1 change speed of player 
+    //completed
+2 change the backdrop color 
+    //completed
+3 change the starting postion of the player and the dot 
+    //completed
+4 hitting start the game restarts
+    //completed
+5 make it so player loops around the screen (left to right, bot to top)
+    Screen resolution is 240x160, maybe once the player is at/beyond the edge we could set their x/y position to (position * -1) ? 
+6 make a speed boost when pressing A(temp and 3 charges, resets on start)
 
 ## Brainstorming game ideas
 
