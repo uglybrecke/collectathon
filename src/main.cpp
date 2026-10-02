@@ -98,11 +98,11 @@ int main()
         }
         //if greater set to min
         if (player.y() > MAX_Y) {
-            player.set_y(MIN_X);
+            player.set_y(MIN_Y);
         }
         //if smaller set to max
-        if (player.x() < MAX_Y) {
-            player.set_y(MIN_Y);
+        if (player.y() < MIN_Y) {
+            player.set_y(MAX_Y);
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
