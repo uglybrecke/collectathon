@@ -84,6 +84,27 @@ int main()
             treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
         }
+
+        //logic for if the player crosses the min/max width height
+        //if player sprite width > than MAX WIDTH, player sprite location becomes MIN WIDTH
+
+        //if greater set to min
+        if (player.x() > MAX_X) {
+            player.set_x(MIN_X);
+        }
+        //if smaller set to max
+        if (player.x() < MIN_X) {
+            player.set_x(MAX_X);
+        }
+        //if greater set to min
+        if (player.y() > MAX_Y) {
+            player.set_y(MIN_X);
+        }
+        //if smaller set to max
+        if (player.x() < MAX_Y) {
+            player.set_y(MIN_Y);
+        }
+
         // The bounding boxes of the player and treasure, snapped to integer pixels
         bn::rect player_rect = bn::rect(player.x().round_integer(),
                                         player.y().round_integer(),

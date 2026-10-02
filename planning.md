@@ -11,7 +11,6 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
 
 ## Planning required changes
 
-
 1 change speed of player 
     //completed
 2 change the backdrop color 
@@ -22,6 +21,8 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     //completed
 5 make it so player loops around the screen (left to right, bot to top)
     Screen resolution is 240x160, maybe once the player is at/beyond the edge we could set their x/y position to (position * -1) ? 
+    i think negative is relative to origin so i think *-1 will throw them off the screen?
+    i'm gonna make an attempt where if they cross path max-w/max-h or min-w/min-h it'll throw them into the other
 6 make a speed boost when pressing A(temp and 3 charges, resets on start)
 
 ## Brainstorming game ideas
