@@ -10,8 +10,10 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
 
 
 ## Planning required changes
+Screen resolution is 240x160, maybe once the player is at/beyond the edge we could set their x/y position to (position * -1) ? 
 
 ## Brainstorming game ideas
 
 ## Plan for implementing game
-
+Updating the score display only when the score changes instead of every frame
+(Could create a function for updating the score display and only call it after changing the score?)
