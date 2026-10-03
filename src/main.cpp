@@ -16,6 +16,7 @@
 
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
+static constexpr bn::fixed BOOST_SPEED = 4;
 
 // Width and height of the the player and treasure bounding boxes
 static constexpr bn::size PLAYER_SIZE = {8, 8};
@@ -69,36 +70,60 @@ int main()
 
     while (true)
     {
+        if (bn::keypad::a_pressed()) {
+            if (boosts > 0) {
+                boosts--;
+                boost_timer += 360; // (add 6 seconds of boost)
+            }
+        }
+
         //with boost
         if (boost_timer > 0) {
+            // Move player with d-pad
+            if (bn::keypad::left_held())
+            {
+                player.set_x(player.x() - BOOST_SPEED);
+            }
+            if (bn::keypad::right_held())
+            {
+                player.set_x(player.x() + BOOST_SPEED);
+            }
+            if (bn::keypad::up_held())
+            {
+                player.set_y(player.y() - BOOST_SPEED);
+            }
+            if (bn::keypad::down_held())
+            {
+                player.set_y(player.y() + BOOST_SPEED);
+            }
+        //without boost
+        } else {
+            // Move player with d-pad
+            if (bn::keypad::left_held())
+            {
+                player.set_x(player.x() - SPEED);
+            }
+            if (bn::keypad::right_held())
+            {
+                player.set_x(player.x() + SPEED);
+            }
+            if (bn::keypad::up_held())
+            {
+                player.set_y(player.y() - SPEED);
+            }
+            if (bn::keypad::down_held())
+            {
+                player.set_y(player.y() + SPEED);
+            }
+        }
 
-        }
-        // Move player with d-pad
-        if (bn::keypad::left_held())
-        {
-            player.set_x(player.x() - SPEED);
-        }
-        if (bn::keypad::right_held())
-        {
-            player.set_x(player.x() + SPEED);
-        }
-        if (bn::keypad::up_held())
-        {
-            player.set_y(player.y() - SPEED);
-        }
-        if (bn::keypad::down_held())
-        {
-            player.set_y(player.y() + SPEED);
-        }
+        //restart game button
         if (bn::keypad::start_pressed())
         {
             player.set_position(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
             treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
         }
-
-        //without boost
-
 
         // logic for crossing outside of screen bounds
         //if greater set to min
