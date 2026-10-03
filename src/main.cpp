@@ -123,6 +123,8 @@ int main()
             player.set_position(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
             treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
+            boost_timer = 0;
+            boosts = 3;
         }
 
         // logic for crossing outside of screen bounds
@@ -170,6 +172,11 @@ int main()
         text_generator.generate(SCORE_X, SCORE_Y,
                                 score_string,
                                 score_sprites);
+
+        //reduce boost timer
+        if (boost_timer > 0) {
+            boost_timer--;
+        }
 
         // Update RNG seed every frame so we don't get the same sequence of positions every time
         rng.update();
