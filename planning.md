@@ -34,6 +34,12 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     //completed
 
 ## Brainstorming game ideas
+1 how to make the game fun?
+    i think making the speed boosts visible as charges would be good, i think maybe the player sprite could increase in size/hitbox and color
+    maybe hitting coins keeps the boost up?
+    maybe treasure starts spawning so there's multiple?
+    maybe the whole game is on a timer?
+    if the treasure auto spawns maybe there's "bad treasure" that slows you down?
 
 ## Plan for implementing game
 Updating the score display only when the score changes instead of every frame
