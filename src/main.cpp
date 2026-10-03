@@ -55,12 +55,24 @@ int main()
     bn::sprite_text_generator text_generator(common::fixed_8x16_sprite_font);
 
     int score = 0;
+    int boosts = 3; //int of 3 boosts
+
+    int boost_timer = 0; // create a counter variable
+
+    // pressing _A will start a "counter" if boosts is greater than 0;
+    // pressing _A will subtract 1 from the boosts if greater than 0;
+    // plan to make two seperate paths for movement
+    // make a new speed variable to hold boost    
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
     while (true)
     {
+        //with boost
+        if (boost_timer > 0) {
+
+        }
         // Move player with d-pad
         if (bn::keypad::left_held())
         {
@@ -85,9 +97,10 @@ int main()
             score = 0;
         }
 
-        //logic for if the player crosses the min/max width height
-        //if player sprite width > than MAX WIDTH, player sprite location becomes MIN WIDTH
+        //without boost
 
+
+        // logic for crossing outside of screen bounds
         //if greater set to min
         if (player.x() > MAX_X) {
             player.set_x(MIN_X);

@@ -21,9 +21,16 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     //completed
 5 make it so player loops around the screen (left to right, bot to top)
     Screen resolution is 240x160, maybe once the player is at/beyond the edge we could set their x/y position to (position * -1) ? 
-    i think negative is relative to origin so i think *-1 will throw them off the screen?
+    i think negative is relative to origin so i think *-1 will throw them off the screen? i might be conceptually misunderstanding
     i'm gonna make an attempt where if they cross path max-w/max-h or min-w/min-h it'll throw them into the other
+    //completed
 6 make a speed boost when pressing A(temp and 3 charges, resets on start)
+    plan is to make an int of 3 boosts
+    create a counter variable
+    pressing _A will start a "counter" if boosts is greater than 0;
+    pressing _A will subtract 1 from the boosts if greater than 0;
+    plan to make two seperate paths for movement
+    make a new speed variable to hold boost    
 
 ## Brainstorming game ideas
 
