@@ -31,6 +31,7 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     pressing _A will subtract 1 from the boosts if greater than 0;
     plan to make two seperate paths for movement
     make a new speed variable to hold boost    
+    //completed
 
 ## Brainstorming game ideas
 
