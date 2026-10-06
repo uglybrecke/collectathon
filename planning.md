@@ -41,6 +41,15 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     maybe the whole game is on a timer?
     if the treasure auto spawns maybe there's "bad treasure" that slows you down?
 
+    //display boosts remaining - concrete goal
+    //collect treasure reset boost timer - goal (possible color if in boost)
+    //spawn multiple
+
 ## Plan for implementing game
 Updating the score display only when the score changes instead of every frame
 (Could create a function for updating the score display and only call it after changing the score?)
+
+//display boosts
+    - either show the word boosts and a number 3, or 3 little dots at the top that go away as you use them, or both?
+    -look into how score is displayed, reverse engineer
+    - possible color change when boosted, find where the sprite color is created and figure out how to alternate which sprite is being used?
