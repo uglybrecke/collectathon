@@ -68,8 +68,14 @@ int main()
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
+    //make 3 boost squares
+    bn::sprite_ptr boost_1 = bn::sprite_items::square.create_sprite(-70, -70);
+
     while (true)
     {
+        //figure out how to place a "boost square on top of the screen"
+
+
         if (bn::keypad::a_pressed()) {
             if (boosts > 0) {
                 boosts--;
