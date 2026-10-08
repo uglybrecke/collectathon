@@ -54,3 +54,4 @@ Updating the score display only when the score changes instead of every frame
     - either show the word boosts and a number 3, or 3 little dots at the top that go away as you use them, or both?
     -look into how score is displayed, reverse engineer
     - possible color change when boosted, find where the sprite color is created and figure out how to alternate which sprite is being used?
+   - Indicate when boost is expiring somehow, maybe making the sprite and/or indicator flash?
