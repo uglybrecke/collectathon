@@ -87,8 +87,16 @@ int main()
             }
         }
 
+        //check if the boost squares should be visible
+        boost_1.set_visible(boosts >= 1);
+        boost_2.set_visible(boosts >= 2);
+        boost_3.set_visible(boosts >= 3);
+
         //with boost
         if (boost_timer > 0) {
+            //set player sprite to hot sprite
+            player.set_item(bn::sprite_items::hot);
+
             // Move player with d-pad
             if (bn::keypad::left_held())
             {
@@ -108,6 +116,9 @@ int main()
             }
         //without boost
         } else {
+            //set player sprite to regular sprite
+            player.set_item(bn::sprite_items::square);
+
             // Move player with d-pad
             if (bn::keypad::left_held())
             {
