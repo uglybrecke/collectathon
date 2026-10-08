@@ -196,8 +196,10 @@ int main()
             int new_y = rng.get_int(MIN_Y, MAX_Y);
             treasure.set_position(new_x, new_y);
 
-            //
-            if ()
+            // if player hits a treasure while boosted add 2 sec
+            if (boost_timer > 0 && boost_timer < 360) {
+                boost_timer += 120;
+            }
 
             score++;
         }

@@ -55,3 +55,11 @@ Updating the score display only when the score changes instead of every frame
     -look into how score is displayed, reverse engineer
     - possible color change when boosted, find where the sprite color is created and figure out how to alternate which sprite is being used?
    - Indicate when boost is expiring somehow, maybe making the sprite and/or indicator flash?
+//
+ok, so in planning we've got some cool stuff to work on:
+    extend boost timer when you hit a coin.
+    increase general size of coin (makes coins easier to hit)
+    tune boost speed
+
+    optional additions:
+    more coin spawns
