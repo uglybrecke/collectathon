@@ -1,4 +1,5 @@
 #include <bn_backdrop.h>
+#include <bn_blending.h>
 #include <bn_core.h>
 #include <bn_display.h>
 #include <bn_log.h>
@@ -86,7 +87,7 @@ int main()
             {
                 boost_count--;
                 boost_timer += 360; // (add 6 seconds of boost)
-                boost_sprites[boost_count].set_visible(false);
+                boost_sprites[boost_count].set_blending_enabled(true);
             }
         }
 
@@ -147,9 +148,11 @@ int main()
             score = 0;
             boost_timer = 0;
             boost_count = 3;
+            bn::blending::set_transparency_alpha(1);
             for (int i = 0; i < 3; i++)
             {
                 boost_sprites[i].set_visible(true);
+                boost_sprites[i].set_blending_enabled(false);
             }
         }
 
@@ -206,7 +209,10 @@ int main()
         // reduce boost timer
         if (boost_timer > 0)
         {
-            if (boost_timer <= 60) // 1 or less of boost left
+            bn::sprite_ptr boost_sprite = boost_sprites[boost_count];
+            bn::fixed current_alpha = bn::blending::transparency_alpha();
+            bn::blending::set_transparency_alpha(bn::max(bn::fixed(0), current_alpha - 0.0027)); // Gradually fade out boost indicator as boost expires
+            if (boost_timer <= 60)                                                               // 1 second or less of boost left
             {
                 if (boost_timer % 30 == 0) // Make player sprite blink every quarter-second
                 {
@@ -218,6 +224,11 @@ int main()
                 }
             }
             boost_timer--;
+            if (boost_timer == 0)
+            {
+                boost_sprite.set_visible(false);
+                boost_sprite.set_blending_enabled(false);
+            }
         }
 
         // Update RNG seed every frame so we don't get the same sequence of positions every time
