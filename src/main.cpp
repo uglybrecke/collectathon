@@ -228,6 +228,7 @@ int main()
             {
                 boost_sprite.set_visible(false);
                 boost_sprite.set_blending_enabled(false);
+                bn::blending::set_transparency_alpha(1);
             }
         }
 
