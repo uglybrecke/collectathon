@@ -42,6 +42,7 @@ the d-pad buttons can be pressed in concert with eachother (ie left and down) be
     if the treasure auto spawns maybe there's "bad treasure" that slows you down?
 
     //display boosts remaining - concrete goal
+        //figure out how to place a square
     //collect treasure reset boost timer - goal (possible color if in boost)
     //spawn multiple
 

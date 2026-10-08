@@ -14,6 +14,8 @@
 #include "bn_sprite_items_square.h"
 #include "common_fixed_8x16_font.h"
 
+#include "bn_sprite_items_hot.h"
+
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
 static constexpr bn::fixed BOOST_SPEED = 4;
@@ -69,7 +71,9 @@ int main()
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
     //make 3 boost squares
-    bn::sprite_ptr boost_1 = bn::sprite_items::square.create_sprite(-70, -70);
+    bn::sprite_ptr boost_1 = bn::sprite_items::hot.create_sprite(-110, -70);
+    bn::sprite_ptr boost_2 = bn::sprite_items::hot.create_sprite(-100, -70);
+    bn::sprite_ptr boost_3 = bn::sprite_items::hot.create_sprite(-90, -70);
 
     while (true)
     {
