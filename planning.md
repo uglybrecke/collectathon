@@ -63,3 +63,5 @@ ok, so in planning we've got some cool stuff to work on:
 
     optional additions:
     more coin spawns
+     - if we're going to add more coin spawns we probably need like a round timer or something
+     - bad coins that slow you down?
