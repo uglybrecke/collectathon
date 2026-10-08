@@ -58,43 +58,41 @@ int main()
     bn::sprite_text_generator text_generator(common::fixed_8x16_sprite_font);
 
     int score = 0;
-    int boosts = 3; //int of 3 boosts
 
     int boost_timer = 0; // create a counter variable
 
     // pressing _A will start a "counter" if boosts is greater than 0;
     // pressing _A will subtract 1 from the boosts if greater than 0;
     // plan to make two seperate paths for movement
-    // make a new speed variable to hold boost    
+    // make a new speed variable to hold boost
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
-    //make 3 boost squares
+    // make 3 boost squares
     bn::sprite_ptr boost_1 = bn::sprite_items::hot.create_sprite(-110, -70);
     bn::sprite_ptr boost_2 = bn::sprite_items::hot.create_sprite(-100, -70);
     bn::sprite_ptr boost_3 = bn::sprite_items::hot.create_sprite(-90, -70);
 
+    bn::sprite_ptr boost_sprites[3] = {boost_1, boost_2, boost_3};
+    int boost_count = 0;
+
     while (true)
     {
-        //figure out how to place a "boost square on top of the screen"
 
-
-        if (bn::keypad::a_pressed()) {
-            if (boosts > 0) {
-                boosts--;
+        if (bn::keypad::a_pressed())
+        {
+            if (boost_count > 0)
+            {
+                boost_count--;
                 boost_timer += 360; // (add 6 seconds of boost)
             }
         }
 
-        //check if the boost squares should be visible
-        boost_1.set_visible(boosts >= 1);
-        boost_2.set_visible(boosts >= 2);
-        boost_3.set_visible(boosts >= 3);
-
-        //with boost
-        if (boost_timer > 0) {
-            //set player sprite to hot sprite
+        // with boost
+        if (boost_timer > 0)
+        {
+            // set player sprite to hot sprite
             player.set_item(bn::sprite_items::hot);
 
             // Move player with d-pad
@@ -114,9 +112,11 @@ int main()
             {
                 player.set_y(player.y() + BOOST_SPEED);
             }
-        //without boost
-        } else {
-            //set player sprite to regular sprite
+            // without boost
+        }
+        else
+        {
+            // set player sprite to regular sprite
             player.set_item(bn::sprite_items::square);
 
             // Move player with d-pad
@@ -138,31 +138,39 @@ int main()
             }
         }
 
-        //restart game button
+        // restart game button
         if (bn::keypad::start_pressed())
         {
             player.set_position(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
             treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
             boost_timer = 0;
-            boosts = 3;
+            boost_count = 3;
+            for (int i = 0; i < 3; i++)
+            {
+                boost_sprites[i].set_visible(true);
+            }
         }
 
         // logic for crossing outside of screen bounds
-        //if greater set to min
-        if (player.x() > MAX_X) {
+        // if greater set to min
+        if (player.x() > MAX_X)
+        {
             player.set_x(MIN_X);
         }
-        //if smaller set to max
-        if (player.x() < MIN_X) {
+        // if smaller set to max
+        if (player.x() < MIN_X)
+        {
             player.set_x(MAX_X);
         }
-        //if greater set to min
-        if (player.y() > MAX_Y) {
+        // if greater set to min
+        if (player.y() > MAX_Y)
+        {
             player.set_y(MIN_Y);
         }
-        //if smaller set to max
-        if (player.y() < MIN_Y) {
+        // if smaller set to max
+        if (player.y() < MIN_Y)
+        {
             player.set_y(MAX_Y);
         }
 
@@ -194,8 +202,9 @@ int main()
                                 score_string,
                                 score_sprites);
 
-        //reduce boost timer
-        if (boost_timer > 0) {
+        // reduce boost timer
+        if (boost_timer > 0)
+        {
             boost_timer--;
         }
 
