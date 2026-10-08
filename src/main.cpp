@@ -75,7 +75,7 @@ int main()
     bn::sprite_ptr boost_3 = bn::sprite_items::hot.create_sprite(-90, -70);
 
     bn::sprite_ptr boost_sprites[3] = {boost_1, boost_2, boost_3};
-    int boost_count = 0;
+    int boost_count = 3;
 
     while (true)
     {
@@ -86,6 +86,7 @@ int main()
             {
                 boost_count--;
                 boost_timer += 360; // (add 6 seconds of boost)
+                boost_sprites[boost_count].set_visible(false);
             }
         }
 
@@ -205,6 +206,17 @@ int main()
         // reduce boost timer
         if (boost_timer > 0)
         {
+            if (boost_timer <= 60) // 1 or less of boost left
+            {
+                if (boost_timer % 30 == 0) // Make player sprite blink every quarter-second
+                {
+                    player.set_visible(false);
+                }
+                else if (boost_timer % 15 == 0)
+                {
+                    player.set_visible(true);
+                }
+            }
             boost_timer--;
         }
 
