@@ -83,7 +83,7 @@ int main()
 
         if (bn::keypad::a_pressed())
         {
-            if (boost_count > 0)
+            if (boost_count > 0 && boost_timer == 0)
             {
                 boost_count--;
                 boost_timer += 360; // (add 6 seconds of boost)
