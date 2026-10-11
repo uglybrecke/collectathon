@@ -77,6 +77,7 @@ int main()
 
     bn::sprite_ptr boost_sprites[3] = {boost_1, boost_2, boost_3};
     int boost_count = 3;
+    int boost_cap = 360;
 
     while (true)
     {
@@ -86,6 +87,7 @@ int main()
             if (boost_count > 0 && boost_timer == 0)
             {
                 boost_count--;
+                boost_cap = 360;
                 boost_timer += 360; // (add 6 seconds of boost)
                 boost_sprites[boost_count].set_blending_enabled(true);
             }
@@ -197,8 +199,11 @@ int main()
             treasure.set_position(new_x, new_y);
 
             // if player hits a treasure while boosted add 2 sec
-            if (boost_timer > 0 && boost_timer < 360) {
+            if (boost_timer > 0 && boost_timer < 360)
+            {
                 boost_timer += 120;
+                boost_cap += 120;
+                bn::blending::set_transparency_alpha(bn::min(bn::fixed(1), (bn::fixed(boost_timer) / bn::fixed(boost_cap))));
             }
 
             score++;
@@ -216,8 +221,8 @@ int main()
         {
             bn::sprite_ptr boost_sprite = boost_sprites[boost_count];
             bn::fixed current_alpha = bn::blending::transparency_alpha();
-            bn::blending::set_transparency_alpha(bn::max(bn::fixed(0), current_alpha - 0.0027)); // Gradually fade out boost indicator as boost expires
-            if (boost_timer <= 60)                                                               // 1 second or less of boost left
+            bn::blending::set_transparency_alpha(bn::max(bn::fixed(0), current_alpha - (1 / bn::fixed(boost_timer)))); // Gradually fade out boost indicator as boost expires
+            if (boost_timer <= 60)                                                                                     // 1 second or less of boost left
             {
                 if (boost_timer % 30 == 0) // Make player sprite blink every quarter-second
                 {
