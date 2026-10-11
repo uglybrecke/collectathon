@@ -237,6 +237,7 @@ int main()
                 }
             }
             boost_timer--;
+            boost_cap--;
             if (boost_timer == 0)
             {
                 boost_sprite.set_visible(false);
