@@ -214,7 +214,13 @@ int main()
         //check if player touches frog
         if (player_rect.intersects(frog_rect))
         {
-            player.set_visible(false);
+            // Cancel the boost, end the boost
+            boost_timer = 0;
+            if (boost_count < 3)
+            {
+                boost_sprites[boost_count].set_visible(false);
+            }
+            
         }
 
         // If the bounding boxes overlap, set the treasure to a new location an increase score
