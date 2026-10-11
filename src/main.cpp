@@ -11,6 +11,9 @@
 #include <bn_size.h>
 #include <bn_string.h>
 
+//butano's version of vector
+#include <bn_vector.h>
+
 #include "bn_sprite_items_dot.h"
 #include "bn_sprite_items_square.h"
 #include "common_fixed_8x16_font.h"
@@ -18,9 +21,15 @@
 #include "bn_sprite_items_hot.h"
 #include "bn_sprite_items_badfrog.h"
 
+
+
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
 static constexpr bn::fixed BOOST_SPEED = 4;
+
+// max number of frogs
+static constexpr int MAX_FROGS = 5;
+
 
 // Width and height of the the player and treasure bounding boxes
 static constexpr bn::size PLAYER_SIZE = {12, 12};
@@ -70,6 +79,11 @@ int main()
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
     bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
+
+    //vector to hold our badfrogs (up to 5 currently)
+    bn::vector<bn::sprite_ptr, MAX_FROGS> frogs;
+    //create a frog and add to the vector
+    frogs.push_back(bn::sprite_items::badfrog.create_sprite(50,50));
 
     // make 3 boost squares
     bn::sprite_ptr boost_1 = bn::sprite_items::hot.create_sprite(-110, -70);
