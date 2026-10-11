@@ -16,6 +16,7 @@
 #include "common_fixed_8x16_font.h"
 
 #include "bn_sprite_items_hot.h"
+#include "bn_sprite_items_badfrog.h"
 
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
