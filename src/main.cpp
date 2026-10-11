@@ -202,7 +202,10 @@ int main()
             if (boost_timer > 0 && boost_timer < 360)
             {
                 boost_timer += 120;
-                boost_cap += 120;
+                if (boost_timer > boost_cap)
+                {
+                    boost_cap = boost_timer;
+                }
                 bn::blending::set_transparency_alpha(bn::min(bn::fixed(1), (bn::fixed(boost_timer) / bn::fixed(boost_cap))));
             }
 
