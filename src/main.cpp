@@ -29,7 +29,7 @@ static constexpr bn::fixed BOOST_SPEED = 4;
 static constexpr bn::fixed SLOW_SPEED = 1;
 
 // max number of frogs
-static constexpr int MAX_FROGS = 5;
+static constexpr int MAX_FROGS = 16;
 
 
 // Width and height of the the player and treasure bounding boxes and frog
@@ -58,7 +58,11 @@ static constexpr int PLAYER_INITIAL_Y = 0;
 static constexpr int TREASURE_INITIAL_X = 0;
 static constexpr int TREASURE_INITIAL_Y = -25;
 
+//% chance that a FROG will spawn when you hit a treasure while boosting
 static constexpr int FROG_SPAWN_CHANCE = 75;
+
+//minimum distance between spawned objects
+static constexpr int SPAWN_DISTANCE = 30;
 
 int main()
 {
@@ -258,37 +262,96 @@ int main()
             }
         }
 
-        // If the bounding boxes overlap, set the treasure to a new location an increase score
+        // If player collects treasure, increase score, spawn new treasure and potentially a frog
         if (player_rect.intersects(treasure_rect))
         {
-            //if we have room in the frogvector and only 75% of the time, make a frog (75% so we can tune it)
-            if (frogs.size() < MAX_FROGS && rng.get_int(0, 100) < FROG_SPAWN_CHANCE)
+            // If there's room for frogs (5 max) // if boosting // and we pass 75% spawn chance
+            if (frogs.size() < MAX_FROGS && rng.get_int(0, 100) < FROG_SPAWN_CHANCE && boost_timer > 0)
             {
-                // Pick a random location for the frog
-                int frog_x = rng.get_int(MIN_X, MAX_X);
-                int frog_y = rng.get_int(MIN_Y, MAX_Y);
+                // Try up to 10 times to find a safe frog location (don't want to loop too long)
+                for (int attempt = 0; attempt < 10; attempt++)
+                {
+                    // Pick a random location for the frog
+                    int frog_x = rng.get_int(MIN_X, MAX_X);
+                    int frog_y = rng.get_int(MIN_Y, MAX_Y);
 
-                // Create the frog and add it to frogvector
-                frogs.push_back(bn::sprite_items::badfrog.create_sprite(frog_x, frog_y));
+                    // Check if frog is too close to player against coordinates, set true if clear
+                    bool too_close = (
+                        bn::abs(frog_x - player.x()) < SPAWN_DISTANCE &&
+                        bn::abs(frog_y - player.y()) < SPAWN_DISTANCE
+                    );
+
+                    // If location is safe, create frog
+                    if (!too_close)
+                    {
+                        frogs.push_back(bn::sprite_items::badfrog.create_sprite(frog_x, frog_y));
+                        break; // Stop looking once we've spawned a frog
+                    }
+                }
             }
-            // Jump to any random point in the screen
-            int new_x = rng.get_int(MIN_X, MAX_X);
-            int new_y = rng.get_int(MIN_Y, MAX_Y);
-            treasure.set_position(new_x, new_y);
 
-            // if player hits a treasure while boosted add 2 sec
+            // Try up to 30 times to find a safe treasure location
+            bool treasure_spawned = false;
+
+            for (int attempt = 0; attempt < 30; attempt++)
+            {
+                int new_x = rng.get_int(MIN_X, MAX_X);
+                int new_y = rng.get_int(MIN_Y, MAX_Y);
+
+                bool too_close = false;
+
+                // Check the new location against every frog
+                for (int i = 0; i < frogs.size(); i++)
+                {
+                    if (bn::abs(new_x - frogs[i].x()) < SPAWN_DISTANCE &&
+                        bn::abs(new_y - frogs[i].y()) < SPAWN_DISTANCE)
+                    {
+                        too_close = true;
+                        break;
+                    }
+                }
+
+                // Found a safe location!
+                if (!too_close)
+                {
+                    treasure.set_position(new_x, new_y);
+                    treasure_spawned = true;
+                    break;
+                }
+            }
+
+            // If all 20 attempts failed, remove frogs and spawn treasure anyway
+            if (!treasure_spawned)
+            {
+                frogs.clear();
+
+                int new_x = rng.get_int(MIN_X, MAX_X);
+                int new_y = rng.get_int(MIN_Y, MAX_Y);
+
+                treasure.set_position(new_x, new_y);
+            }
+
+
+            // If player hits treasure while boosted, add 2 seconds
             if (boost_timer > 0 && boost_timer < 360)
             {
                 boost_timer += 120;
+
                 if (boost_timer > boost_cap)
                 {
                     boost_cap = boost_timer;
                 }
-                bn::blending::set_transparency_alpha(bn::min(bn::fixed(1), (bn::fixed(boost_timer) / bn::fixed(boost_cap))));
+
+                bn::blending::set_transparency_alpha(
+                    bn::min(bn::fixed(1), bn::fixed(boost_timer) / bn::fixed(boost_cap))
+                );
             }
 
             score++;
         }
+
+
+
 
         // Update score display
         bn::string<MAX_SCORE_CHARS> score_string = bn::to_string<MAX_SCORE_CHARS>(score);
