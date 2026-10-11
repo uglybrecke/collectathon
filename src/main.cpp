@@ -26,14 +26,16 @@
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
 static constexpr bn::fixed BOOST_SPEED = 4;
+static constexpr bn::fixed SLOW_SPEED = 1;
 
 // max number of frogs
 static constexpr int MAX_FROGS = 5;
 
 
-// Width and height of the the player and treasure bounding boxes
+// Width and height of the the player and treasure bounding boxes and frog
 static constexpr bn::size PLAYER_SIZE = {12, 12};
 static constexpr bn::size TREASURE_SIZE = {12, 12};
+static constexpr bn::size FROG_SIZE = {12, 12};
 
 // Full bounds of the screen
 static constexpr int MIN_Y = -bn::display::height() / 2;
@@ -56,6 +58,8 @@ static constexpr int PLAYER_INITIAL_Y = 0;
 static constexpr int TREASURE_INITIAL_X = 0;
 static constexpr int TREASURE_INITIAL_Y = -25;
 
+static constexpr int FROG_SPAWN_CHANCE = 75;
+
 int main()
 {
     bn::core::init();
@@ -72,6 +76,8 @@ int main()
 
     int boost_timer = 0; // create a counter variable
 
+    int slow_timer = 0;
+
     // pressing _A will start a "counter" if boosts is greater than 0;
     // pressing _A will subtract 1 from the boosts if greater than 0;
     // plan to make two seperate paths for movement
@@ -82,9 +88,6 @@ int main()
 
     //vector to hold our badfrogs (up to 5 currently)
     bn::vector<bn::sprite_ptr, MAX_FROGS> frogs;
-
-    //create a frog and add to the vector
-    frogs.push_back(bn::sprite_items::badfrog.create_sprite(50,50));
 
     // make 3 boost squares
     bn::sprite_ptr boost_1 = bn::sprite_items::hot.create_sprite(-110, -70);
@@ -97,7 +100,6 @@ int main()
 
     while (true)
     {
-
         if (bn::keypad::a_pressed())
         {
             if (boost_count > 0 && boost_timer == 0)
@@ -108,7 +110,6 @@ int main()
                 boost_sprites[boost_count].set_blending_enabled(true);
             }
         }
-
         // with boost
         if (boost_timer > 0)
         {
@@ -132,9 +133,30 @@ int main()
             {
                 player.set_y(player.y() + BOOST_SPEED);
             }
-            // without boost
         }
-        else
+        // slow speed
+        else if (slow_timer > 0) 
+        {
+            // Move player with d-pad
+            if (bn::keypad::left_held())
+            {
+                player.set_x(player.x() - SLOW_SPEED);
+            }
+            if (bn::keypad::right_held())
+            {
+                player.set_x(player.x() + SLOW_SPEED);
+            }
+            if (bn::keypad::up_held())
+            {
+                player.set_y(player.y() - SLOW_SPEED);
+            }
+            if (bn::keypad::down_held())
+            {
+                player.set_y(player.y() + SLOW_SPEED);
+            }
+        }
+        // without boost
+        else 
         {
             // set player sprite to regular sprite
             player.set_item(bn::sprite_items::square);
@@ -157,7 +179,6 @@ int main()
                 player.set_y(player.y() + SPEED);
             }
         }
-
         // restart game button
         if (bn::keypad::start_pressed())
         {
@@ -173,7 +194,6 @@ int main()
                 boost_sprites[i].set_blending_enabled(false);
             }
         }
-
         // logic for crossing outside of screen bounds
         // if greater set to min
         if (player.x() > MAX_X)
@@ -205,27 +225,52 @@ int main()
                                           treasure.y().round_integer(),
                                           TREASURE_SIZE.width(),
                                           TREASURE_SIZE.height());
-        //frog collision
-        bn::rect frog_rect = bn::rect(frogs[0].x().round_integer(),
-                                      frogs[0].y().round_integer(),
-                                      TREASURE_SIZE.width(),
-                                      TREASURE_SIZE.height());
 
-        //check if player touches frog
-        if (player_rect.intersects(frog_rect))
+        //since there are going to be multiple frogs we have to loop through them to check if theres collision
+        //frog collision
+        for (int i = 0; i < frogs.size(); i++)
         {
-            // Cancel the boost, end the boost
-            boost_timer = 0;
-            if (boost_count < 3)
+            bn::rect frog_rect = bn::rect(frogs[i].x().round_integer(),
+                                      frogs[i].y().round_integer(),
+                                      FROG_SIZE.width(),
+                                      FROG_SIZE.height());
+
+            //check if the player has touched this frog
+            if (player_rect.intersects(frog_rect))
             {
-                boost_sprites[boost_count].set_visible(false);
+                // Cancel the boost
+                boost_timer = 0;
+                slow_timer = 180;
+                if (boost_count < 3)
+                {
+                    boost_sprites[boost_count].set_visible(false);
+                    boost_sprites[boost_count].set_blending_enabled(false);
+                }
+                // Reset transparency
+                bn::blending::set_transparency_alpha(1);
+                player.set_visible(true);
+                player.set_item(bn::sprite_items::square);
+                
+                //get rid of all the frogs
+                frogs.clear();
+                //end the loop
+                break;
             }
-            
         }
 
         // If the bounding boxes overlap, set the treasure to a new location an increase score
         if (player_rect.intersects(treasure_rect))
         {
+            //if we have room in the frogvector and only 75% of the time, make a frog (75% so we can tune it)
+            if (frogs.size() < MAX_FROGS && rng.get_int(0, 100) < FROG_SPAWN_CHANCE)
+            {
+                // Pick a random location for the frog
+                int frog_x = rng.get_int(MIN_X, MAX_X);
+                int frog_y = rng.get_int(MIN_Y, MAX_Y);
+
+                // Create the frog and add it to frogvector
+                frogs.push_back(bn::sprite_items::badfrog.create_sprite(frog_x, frog_y));
+            }
             // Jump to any random point in the screen
             int new_x = rng.get_int(MIN_X, MAX_X);
             int new_y = rng.get_int(MIN_Y, MAX_Y);
@@ -276,7 +321,16 @@ int main()
                 boost_sprite.set_visible(false);
                 boost_sprite.set_blending_enabled(false);
                 bn::blending::set_transparency_alpha(1);
+
+                //when a boost expires go ahead and clear the frogs!
+                frogs.clear();
             }
+        }
+
+        //slow timer countdown
+        if (slow_timer > 0) 
+        {
+            slow_timer--;
         }
 
         // Update RNG seed every frame so we don't get the same sequence of positions every time
