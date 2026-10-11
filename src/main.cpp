@@ -82,6 +82,7 @@ int main()
 
     //vector to hold our badfrogs (up to 5 currently)
     bn::vector<bn::sprite_ptr, MAX_FROGS> frogs;
+
     //create a frog and add to the vector
     frogs.push_back(bn::sprite_items::badfrog.create_sprite(50,50));
 
@@ -204,6 +205,17 @@ int main()
                                           treasure.y().round_integer(),
                                           TREASURE_SIZE.width(),
                                           TREASURE_SIZE.height());
+        //frog collision
+        bn::rect frog_rect = bn::rect(frogs[0].x().round_integer(),
+                                      frogs[0].y().round_integer(),
+                                      TREASURE_SIZE.width(),
+                                      TREASURE_SIZE.height());
+
+        //check if player touches frog
+        if (player_rect.intersects(frog_rect))
+        {
+            player.set_visible(false);
+        }
 
         // If the bounding boxes overlap, set the treasure to a new location an increase score
         if (player_rect.intersects(treasure_rect))
