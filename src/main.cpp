@@ -11,17 +11,15 @@
 #include <bn_size.h>
 #include <bn_string.h>
 
-//butano's version of vector
+// butano's version of vector
 #include <bn_vector.h>
 
-#include "bn_sprite_items_dot.h"
+#include "bn_sprite_items_treasure.h"
 #include "bn_sprite_items_square.h"
 #include "common_fixed_8x16_font.h"
 
 #include "bn_sprite_items_hot.h"
 #include "bn_sprite_items_badfrog.h"
-
-
 
 // Pixels / Frame player moves at
 static constexpr bn::fixed SPEED = 2;
@@ -30,7 +28,6 @@ static constexpr bn::fixed SLOW_SPEED = 1;
 
 // max number of frogs
 static constexpr int MAX_FROGS = 16;
-
 
 // Width and height of the the player and treasure bounding boxes and frog
 static constexpr bn::size PLAYER_SIZE = {12, 12};
@@ -61,7 +58,7 @@ static constexpr int TREASURE_INITIAL_Y = -25;
 //% chance that a FROG will spawn when you hit a treasure while boosting
 static constexpr int FROG_SPAWN_CHANCE = 75;
 
-//minimum distance between spawned objects
+// minimum distance between spawned objects
 static constexpr int SPAWN_DISTANCE = 30;
 
 int main()
@@ -88,9 +85,9 @@ int main()
     // make a new speed variable to hold boost
 
     bn::sprite_ptr player = bn::sprite_items::square.create_sprite(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
-    bn::sprite_ptr treasure = bn::sprite_items::dot.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
+    bn::sprite_ptr treasure = bn::sprite_items::treasure.create_sprite(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
 
-    //vector to hold our badfrogs (up to 5 currently)
+    // vector to hold our badfrogs (up to 5 currently)
     bn::vector<bn::sprite_ptr, MAX_FROGS> frogs;
 
     // make 3 boost squares
@@ -139,7 +136,7 @@ int main()
             }
         }
         // slow speed
-        else if (slow_timer > 0) 
+        else if (slow_timer > 0)
         {
             // Move player with d-pad
             if (bn::keypad::left_held())
@@ -160,7 +157,7 @@ int main()
             }
         }
         // without boost
-        else 
+        else
         {
             // set player sprite to regular sprite
             player.set_item(bn::sprite_items::square);
@@ -230,16 +227,16 @@ int main()
                                           TREASURE_SIZE.width(),
                                           TREASURE_SIZE.height());
 
-        //since there are going to be multiple frogs we have to loop through them to check if theres collision
-        //frog collision
+        // since there are going to be multiple frogs we have to loop through them to check if theres collision
+        // frog collision
         for (int i = 0; i < frogs.size(); i++)
         {
             bn::rect frog_rect = bn::rect(frogs[i].x().round_integer(),
-                                      frogs[i].y().round_integer(),
-                                      FROG_SIZE.width(),
-                                      FROG_SIZE.height());
+                                          frogs[i].y().round_integer(),
+                                          FROG_SIZE.width(),
+                                          FROG_SIZE.height());
 
-            //check if the player has touched this frog
+            // check if the player has touched this frog
             if (player_rect.intersects(frog_rect))
             {
                 // Cancel the boost
@@ -254,10 +251,10 @@ int main()
                 bn::blending::set_transparency_alpha(1);
                 player.set_visible(true);
                 player.set_item(bn::sprite_items::square);
-                
-                //get rid of all the frogs
+
+                // get rid of all the frogs
                 frogs.clear();
-                //end the loop
+                // end the loop
                 break;
             }
         }
@@ -276,10 +273,8 @@ int main()
                     int frog_y = rng.get_int(MIN_Y, MAX_Y);
 
                     // Check if frog is too close to player against coordinates, set true if clear
-                    bool too_close = (
-                        bn::abs(frog_x - player.x()) < SPAWN_DISTANCE &&
-                        bn::abs(frog_y - player.y()) < SPAWN_DISTANCE
-                    );
+                    bool too_close = (bn::abs(frog_x - player.x()) < SPAWN_DISTANCE &&
+                                      bn::abs(frog_y - player.y()) < SPAWN_DISTANCE);
 
                     // If location is safe, create frog
                     if (!too_close)
@@ -331,7 +326,6 @@ int main()
                 treasure.set_position(new_x, new_y);
             }
 
-
             // If player hits treasure while boosted, add 2 seconds
             if (boost_timer > 0 && boost_timer < 360)
             {
@@ -343,15 +337,11 @@ int main()
                 }
 
                 bn::blending::set_transparency_alpha(
-                    bn::min(bn::fixed(1), bn::fixed(boost_timer) / bn::fixed(boost_cap))
-                );
+                    bn::min(bn::fixed(1), bn::fixed(boost_timer) / bn::fixed(boost_cap)));
             }
 
             score++;
         }
-
-
-
 
         // Update score display
         bn::string<MAX_SCORE_CHARS> score_string = bn::to_string<MAX_SCORE_CHARS>(score);
@@ -385,13 +375,13 @@ int main()
                 boost_sprite.set_blending_enabled(false);
                 bn::blending::set_transparency_alpha(1);
 
-                //when a boost expires go ahead and clear the frogs!
+                // when a boost expires go ahead and clear the frogs!
                 frogs.clear();
             }
         }
 
-        //slow timer countdown
-        if (slow_timer > 0) 
+        // slow timer countdown
+        if (slow_timer > 0)
         {
             slow_timer--;
         }
