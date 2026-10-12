@@ -22,9 +22,10 @@
 #include "bn_sprite_items_badfrog.h"
 
 // Pixels / Frame player moves at
-static constexpr bn::fixed SPEED = 2;
+static constexpr bn::fixed NORMAL_SPEED = 2;
 static constexpr bn::fixed BOOST_SPEED = 4;
 static constexpr bn::fixed SLOW_SPEED = 1;
+static bn::fixed current_speed = NORMAL_SPEED;
 
 // max number of frogs
 static constexpr int MAX_FROGS = 16;
@@ -108,77 +109,26 @@ int main()
                 boost_count--;
                 boost_cap = 360;
                 boost_timer += 360; // (add 6 seconds of boost)
+                current_speed = BOOST_SPEED;
                 boost_sprites[boost_count].set_blending_enabled(true);
             }
         }
-        // with boost
-        if (boost_timer > 0)
+        // Move player with d-pad
+        if (bn::keypad::left_held())
         {
-            // set player sprite to hot sprite
-            player.set_item(bn::sprite_items::hot);
-
-            // Move player with d-pad
-            if (bn::keypad::left_held())
-            {
-                player.set_x(player.x() - BOOST_SPEED);
-            }
-            if (bn::keypad::right_held())
-            {
-                player.set_x(player.x() + BOOST_SPEED);
-            }
-            if (bn::keypad::up_held())
-            {
-                player.set_y(player.y() - BOOST_SPEED);
-            }
-            if (bn::keypad::down_held())
-            {
-                player.set_y(player.y() + BOOST_SPEED);
-            }
+            player.set_x(player.x() - current_speed);
         }
-        // slow speed
-        else if (slow_timer > 0)
+        if (bn::keypad::right_held())
         {
-            // Move player with d-pad
-            if (bn::keypad::left_held())
-            {
-                player.set_x(player.x() - SLOW_SPEED);
-            }
-            if (bn::keypad::right_held())
-            {
-                player.set_x(player.x() + SLOW_SPEED);
-            }
-            if (bn::keypad::up_held())
-            {
-                player.set_y(player.y() - SLOW_SPEED);
-            }
-            if (bn::keypad::down_held())
-            {
-                player.set_y(player.y() + SLOW_SPEED);
-            }
+            player.set_x(player.x() + current_speed);
         }
-        // without boost
-        else
+        if (bn::keypad::up_held())
         {
-            // set player sprite to regular sprite
-            player.set_item(bn::sprite_items::square);
-
-            // Move player with d-pad
-            if (bn::keypad::left_held())
-            {
-                player.set_x(player.x() - SPEED);
-            }
-            if (bn::keypad::right_held())
-            {
-                player.set_x(player.x() + SPEED);
-            }
-            if (bn::keypad::up_held())
-            {
-                player.set_y(player.y() - SPEED);
-            }
-            if (bn::keypad::down_held())
-            {
-                player.set_y(player.y() + SPEED);
-            }
+            player.set_y(player.y() - current_speed);
+        }
+        if (bn::keypad::down_held())
+        {
+            player.set_y(player.y() + current_speed);
         }
         // restart game button
         if (bn::keypad::start_pressed())
@@ -186,6 +136,7 @@ int main()
             player.set_position(PLAYER_INITIAL_X, PLAYER_INITIAL_Y);
             treasure.set_position(TREASURE_INITIAL_X, TREASURE_INITIAL_Y);
             score = 0;
+            current_speed = NORMAL_SPEED;
             boost_timer = 0;
             boost_count = 3;
             bn::blending::set_transparency_alpha(1);
@@ -242,6 +193,7 @@ int main()
                 // Cancel the boost
                 boost_timer = 0;
                 slow_timer = 180;
+                current_speed = SLOW_SPEED;
                 if (boost_count < 3)
                 {
                     boost_sprites[boost_count].set_visible(false);
@@ -374,6 +326,7 @@ int main()
                 boost_sprite.set_visible(false);
                 boost_sprite.set_blending_enabled(false);
                 bn::blending::set_transparency_alpha(1);
+                current_speed = NORMAL_SPEED;
 
                 // when a boost expires go ahead and clear the frogs!
                 frogs.clear();
@@ -384,6 +337,10 @@ int main()
         if (slow_timer > 0)
         {
             slow_timer--;
+            if (slow_timer == 0)
+            {
+                current_speed = NORMAL_SPEED;
+            }
         }
 
         // Update RNG seed every frame so we don't get the same sequence of positions every time
