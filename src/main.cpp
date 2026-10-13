@@ -62,6 +62,11 @@ static constexpr int FROG_SPAWN_CHANCE = 75;
 // minimum distance between spawned objects
 static constexpr int SPAWN_DISTANCE = 30;
 
+bn::rect get_sprite_bounding_box(bn::sprite_ptr sprite, bn::size size)
+{
+    return bn::rect(sprite.x().round_integer(), sprite.y().round_integer(), size.width(), size.height());
+}
+
 int main()
 {
     bn::core::init();
@@ -95,6 +100,11 @@ int main()
     bn::sprite_ptr boost_1 = bn::sprite_items::hot.create_sprite(-110, -70);
     bn::sprite_ptr boost_2 = bn::sprite_items::hot.create_sprite(-100, -70);
     bn::sprite_ptr boost_3 = bn::sprite_items::hot.create_sprite(-90, -70);
+
+    // These sprites are static so we only need to get the bounding box once
+    bn::rect boost_1_rect = get_sprite_bounding_box(boost_1, PLAYER_SIZE);
+    bn::rect boost_2_rect = get_sprite_bounding_box(boost_2, PLAYER_SIZE);
+    bn::rect boost_3_rect = get_sprite_bounding_box(boost_3, PLAYER_SIZE);
 
     bn::sprite_ptr boost_sprites[3] = {boost_1, boost_2, boost_3};
     int boost_count = 3;
@@ -161,23 +171,14 @@ int main()
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
-        bn::rect player_rect = bn::rect(player.x().round_integer(),
-                                        player.y().round_integer(),
-                                        PLAYER_SIZE.width(),
-                                        PLAYER_SIZE.height());
-        bn::rect treasure_rect = bn::rect(treasure.x().round_integer(),
-                                          treasure.y().round_integer(),
-                                          TREASURE_SIZE.width(),
-                                          TREASURE_SIZE.height());
+        bn::rect player_rect = get_sprite_bounding_box(player, PLAYER_SIZE);
+        bn::rect treasure_rect = get_sprite_bounding_box(treasure, TREASURE_SIZE);
 
         // since there are going to be multiple frogs we have to loop through them to check if theres collision
         // frog collision
         for (int i = 0; i < frogs.size(); i++)
         {
-            bn::rect frog_rect = bn::rect(frogs[i].x().round_integer(),
-                                          frogs[i].y().round_integer(),
-                                          FROG_SIZE.width(),
-                                          FROG_SIZE.height());
+            bn::rect frog_rect = get_sprite_bounding_box(frogs[i], FROG_SIZE);
 
             // check if the player has touched this frog
             if (player_rect.intersects(frog_rect))
