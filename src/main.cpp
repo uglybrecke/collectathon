@@ -101,7 +101,13 @@ int main()
     bn::sprite_ptr boost_2 = bn::sprite_items::hot.create_sprite(-100, -70);
     bn::sprite_ptr boost_3 = bn::sprite_items::hot.create_sprite(-90, -70);
 
+    // These sprites are static so we only need to get the bounding box once
+    bn::rect boost_1_rect = get_sprite_bounding_box(boost_1, PLAYER_SIZE);
+    bn::rect boost_2_rect = get_sprite_bounding_box(boost_2, PLAYER_SIZE);
+    bn::rect boost_3_rect = get_sprite_bounding_box(boost_3, PLAYER_SIZE);
+
     bn::sprite_ptr boost_sprites[3] = {boost_1, boost_2, boost_3};
+    bn::rect boost_sprite_rects[3] = {boost_1_rect, boost_2_rect, boost_3_rect};
 
     int boost_count = 3;
     int boost_cap = 360;
@@ -248,17 +254,17 @@ int main()
                     }
                 }
 
-                // Check if the new location is behind the boost squares
-                // Left edge of first boost square - half of treasure size
-                int boost_square_min_x = -116 - 6;
-                // Right edge of first boost square + Remaining boost squares + Space between boost squares
-                int boost_square_max_x = -102 + (16 * (boost_count - 1)) + 6;
-                int boost_square_min_y = -78 - 6;
-                int boost_square_max_y = -62 + 6;
+                // Create a bounding box for the new treasure
+                bn::rect new_treasure_bounding_box = bn::rect(new_x, new_y, TREASURE_SIZE.width(), TREASURE_SIZE.height());
 
-                if ((new_x > boost_square_min_x && new_x < boost_square_max_x) || (new_y > boost_square_min_y && new_y < boost_square_max_y))
+                // And check if it's behind the boost squares
+                for (int i = 0; i < 3; i++)
                 {
-                    too_close = true;
+                    if (new_treasure_bounding_box.intersects(boost_sprite_rects[i]) && boost_sprites[i].visible())
+                    {
+                        too_close = true;
+                        break;
+                    }
                 }
 
                 // Found a safe location!
