@@ -153,6 +153,7 @@ int main()
                 boost_sprites[i].set_visible(true);
                 boost_sprites[i].set_blending_enabled(false);
             }
+            player.set_item(bn::sprite_items::square);
         }
 
         // logic for crossing outside of screen bounds
@@ -337,6 +338,14 @@ int main()
         // slow timer countdown
         if (slow_timer > 0)
         {
+            if (slow_timer % 30 == 0) // Make player sprite blink every quarter-second
+            {
+                player.set_visible(false);
+            }
+            else if (slow_timer % 15 == 0)
+            {
+                player.set_visible(true);
+            }
             slow_timer--;
             if (slow_timer == 0)
             {
