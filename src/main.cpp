@@ -288,19 +288,18 @@ int main()
                     boost_cap = boost_timer;
                 }
 
-                bn::blending::set_transparency_alpha(
-                    bn::min(bn::fixed(1), bn::fixed(boost_timer) / bn::fixed(boost_cap)));
+                bn::blending::set_transparency_alpha(bn::min(bn::fixed(1), bn::fixed(boost_timer) / bn::fixed(boost_cap)));
             }
 
             score++;
-        }
 
-        // Update score display
-        bn::string<MAX_SCORE_CHARS> score_string = bn::to_string<MAX_SCORE_CHARS>(score);
-        score_sprites.clear();
-        text_generator.generate(SCORE_X, SCORE_Y,
-                                score_string,
-                                score_sprites);
+            // Update score display
+            bn::string<MAX_SCORE_CHARS> score_string = bn::to_string<MAX_SCORE_CHARS>(score);
+            score_sprites.clear();
+            text_generator.generate(SCORE_X, SCORE_Y,
+                                    score_string,
+                                    score_sprites);
+        }
 
         // reduce boost timer
         if (boost_timer > 0)
