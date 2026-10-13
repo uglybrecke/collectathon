@@ -62,7 +62,7 @@ static constexpr int FROG_SPAWN_CHANCE = 75;
 // minimum distance between spawned objects
 static constexpr int SPAWN_DISTANCE = 30;
 
-static constexpr int ROUND_LENGTH = 3600;
+static constexpr int ROUND_LENGTH = 5400;
 
 bn::rect get_sprite_bounding_box(bn::sprite_ptr sprite, bn::size size)
 {
@@ -120,24 +120,32 @@ int main()
     {
         if (round_timer > 0)
         {
+            bool decrease_round_timer = !(round_timer == 3600);
             // Move player with d-pad
             if (bn::keypad::left_held())
             {
                 player.set_x(player.x() - current_speed);
+                decrease_round_timer = true;
             }
             if (bn::keypad::right_held())
             {
                 player.set_x(player.x() + current_speed);
+                decrease_round_timer = true;
             }
             if (bn::keypad::up_held())
             {
                 player.set_y(player.y() - current_speed);
+                decrease_round_timer = true;
             }
             if (bn::keypad::down_held())
             {
                 player.set_y(player.y() + current_speed);
+                decrease_round_timer = true;
             }
-            round_timer--;
+            if (decrease_round_timer)
+            {
+                round_timer--;
+            }
         }
         else
         {
