@@ -62,6 +62,8 @@ static constexpr int FROG_SPAWN_CHANCE = 75;
 // minimum distance between spawned objects
 static constexpr int SPAWN_DISTANCE = 30;
 
+static constexpr int ROUND_LENGTH = 3600;
+
 bn::rect get_sprite_bounding_box(bn::sprite_ptr sprite, bn::size size)
 {
     return bn::rect(sprite.x().round_integer(), sprite.y().round_integer(), size.width(), size.height());
@@ -112,8 +114,45 @@ int main()
     int boost_count = 3;
     int boost_cap = 360;
 
+    int round_timer = ROUND_LENGTH;
+
     while (true)
     {
+        if (round_timer > 0)
+        {
+            // Move player with d-pad
+            if (bn::keypad::left_held())
+            {
+                player.set_x(player.x() - current_speed);
+            }
+            if (bn::keypad::right_held())
+            {
+                player.set_x(player.x() + current_speed);
+            }
+            if (bn::keypad::up_held())
+            {
+                player.set_y(player.y() - current_speed);
+            }
+            if (bn::keypad::down_held())
+            {
+                player.set_y(player.y() + current_speed);
+            }
+            round_timer--;
+        }
+        else
+        {
+            // Recycle score display for game over text
+            bn::string_view game_over_text[3] = {"GAME OVER", "Final score: " + bn::to_string<17>(score), "START: Play again"};
+            int start_x = 0;
+            int start_y = -20;
+            score_sprites.clear();
+            text_generator.set_center_alignment();
+            for (int i = 0; i < 3; i++)
+            {
+                text_generator.generate(start_x, start_y + (i * 16), game_over_text[i], score_sprites);
+            }
+        }
+
         if (bn::keypad::a_pressed())
         {
             if (boost_count > 0 && boost_timer == 0)
@@ -127,23 +166,6 @@ int main()
                 player.set_item(bn::sprite_items::hot);
             }
         }
-        // Move player with d-pad
-        if (bn::keypad::left_held())
-        {
-            player.set_x(player.x() - current_speed);
-        }
-        if (bn::keypad::right_held())
-        {
-            player.set_x(player.x() + current_speed);
-        }
-        if (bn::keypad::up_held())
-        {
-            player.set_y(player.y() - current_speed);
-        }
-        if (bn::keypad::down_held())
-        {
-            player.set_y(player.y() + current_speed);
-        }
         // restart game button
         if (bn::keypad::start_pressed())
         {
@@ -153,6 +175,7 @@ int main()
             current_speed = NORMAL_SPEED;
             boost_timer = 0;
             boost_count = 3;
+            round_timer = ROUND_LENGTH;
             bn::blending::set_transparency_alpha(1);
             for (int i = 0; i < 3; i++)
             {
@@ -160,6 +183,10 @@ int main()
                 boost_sprites[i].set_blending_enabled(false);
             }
             player.set_item(bn::sprite_items::square);
+            text_generator.set_left_alignment();
+            score_sprites.clear();
+            bn::string<1> score_string = "0";
+            text_generator.generate(SCORE_X, SCORE_Y, score_string, score_sprites);
         }
 
         // logic for crossing outside of screen bounds
