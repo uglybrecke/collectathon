@@ -370,6 +370,7 @@ int main()
                 boost_sprite.set_blending_enabled(false);
                 bn::blending::set_transparency_alpha(1);
                 current_speed = NORMAL_SPEED;
+                player.set_item(bn::sprite_items::square);
 
                 // when a boost expires go ahead and clear the frogs!
                 frogs.clear();
