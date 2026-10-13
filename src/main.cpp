@@ -111,6 +111,8 @@ int main()
                 boost_timer += 360; // (add 6 seconds of boost)
                 current_speed = BOOST_SPEED;
                 boost_sprites[boost_count].set_blending_enabled(true);
+                // set player sprite to hot sprite
+                player.set_item(bn::sprite_items::hot);
             }
         }
         // Move player with d-pad
@@ -146,26 +148,16 @@ int main()
                 boost_sprites[i].set_blending_enabled(false);
             }
         }
+
         // logic for crossing outside of screen bounds
-        // if greater set to min
-        if (player.x() > MAX_X)
+        // move player to other side if above / below max / min
+        if (player.x() > MAX_X || player.x() < MIN_X)
         {
-            player.set_x(MIN_X);
+            player.set_x(player.x() * -1);
         }
-        // if smaller set to max
-        if (player.x() < MIN_X)
+        if (player.y() > MAX_Y || player.y() < MIN_Y)
         {
-            player.set_x(MAX_X);
-        }
-        // if greater set to min
-        if (player.y() > MAX_Y)
-        {
-            player.set_y(MIN_Y);
-        }
-        // if smaller set to max
-        if (player.y() < MIN_Y)
-        {
-            player.set_y(MAX_Y);
+            player.set_y(player.y() * -1);
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
