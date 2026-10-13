@@ -201,11 +201,11 @@ int main()
         // move player to other side if above / below max / min
         if (player.x() > MAX_X || player.x() < MIN_X)
         {
-            player.set_x(player.x() * -1);
+            player.set_x(player.x().round_integer() * -1);
         }
         if (player.y() > MAX_Y || player.y() < MIN_Y)
         {
-            player.set_y(player.y() * -1);
+            player.set_y(player.y().round_integer() * -1);
         }
 
         // The bounding boxes of the player and treasure, snapped to integer pixels
